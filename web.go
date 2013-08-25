@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"fmt"
 	"os"
-	"html/template"
+//	"html/template"
 	"io/ioutil"
 )
 
@@ -26,17 +26,20 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 //OpenBLAS : Your OS does not support AVX instructions. OpenBLAS is using Nehalem kernels as a fallback, which may give poorer performance.
 
 func codeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
+	if r.Method == "POST" {
 		conn, err := net.Dial("tcp", "localhost:" + tcpPort)
 		defer conn.Close()
 		if err != nil {
-			http.Error(w, err, http.StatusInternalServerError)
+			fmt.Println("got an error from the server", err.Error())
 		}
 		data := r.FormValue("code")
 		conn.Write([]byte(data))
+		conn.Write([]byte("\n"))
 		conn.Write([]byte("exit()"))
+		conn.Write([]byte("\n"))
 		buf, _ := ioutil.ReadAll(conn)
-		fmt.Println(buf.String())
+		fmt.Println(string(buf))
+		return
 	}
 	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 }
@@ -48,3 +51,4 @@ func main() {
 	fmt.Println("Serving on port", port)
 	http.ListenAndServe(":" + port, nil)
 }
+
