@@ -29,6 +29,8 @@ func codeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		conn, err := net.Dial("tcp", "localhost:" + tcpPort)
 		data := make(map[string]string)
+		data["message"] = ""
+		data["error"] = ""
 		defer conn.Close()
 		if err != nil {
 			data["error"] = err.Error()
@@ -36,11 +38,11 @@ func codeHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println("Got an error encoding json error", err.Error())
 			}
-			fmt.Fprint(r, d)
+			fmt.Fprint(w, d)
 			return
 		}
-		data := r.FormValue("code")
-		conn.Write([]byte(data))
+		code := r.FormValue("code")
+		conn.Write([]byte(code))
 		conn.Write([]byte("\n"))
 		conn.Write([]byte("exit()"))
 		conn.Write([]byte("\n"))
@@ -51,7 +53,7 @@ func codeHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("Got an error encoding json message", err.Error())
 		}
-		fmt.Fprint(r, d)
+		fmt.Fprint(w, d)
 		return
 	}
 	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
