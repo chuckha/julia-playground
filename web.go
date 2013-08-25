@@ -53,7 +53,7 @@ func codeHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("Got an error encoding json message", err.Error())
 		}
-		fmt.Fprint(w, d)
+		fmt.Fprint(w, string(d))
 		return
 	}
 	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
