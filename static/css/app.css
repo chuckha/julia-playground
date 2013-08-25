@@ -1,0 +1,27 @@
+.wrap {
+  width: 100%;
+  position: absolute;
+  left: 5px;
+  bottom: 25%;
+}
+
+.lines {
+  float: left;
+  width: 3%; 
+  margin-top: 0px;
+}
+
+#code{
+  height:100%; 
+  float:right;
+  overflow:hidden;
+  width: 90%;
+}
+
+.output {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
